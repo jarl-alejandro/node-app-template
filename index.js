@@ -1,13 +1,19 @@
 import { createServer } from 'http'
+import mongoose from 'mongoose'
+import app from './app'
+import config from './config'
 
-const port = process.env.PORT || 3000
+const server = createServer(app)
 
-const server = createServer(onRequest)
+mongoose.Promise = global.Promise
+mongoose.connect(config.DB, { useNewUrlParser: true })
+.then(() => {
 
-function onRequest (req, res) {
-	res.end('Hello World')
-}
-
-server.listen(port, () => {
-	console.log(`Server running in port ${port}`)
+	server.listen(config.PORT, () => {
+		console.log(`
+			🚀  GraphQL corriendo en ${config.URL}
+			🎉  GraphiQL en ${config.URL}/graphql
+		`)
+	})
 })
+
